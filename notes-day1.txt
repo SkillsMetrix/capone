@@ -1,1 +1,52 @@
 
+NOdeJS:
+lang,server,platform
+
+
+
+JS->
+
+Functional prog
+
+Aync in nature 
+
+Event Driven
+
+
+Nodejs -> JS -> Server
+
+Single Thread Model
+
+
+
+ver 20
+
+package.json (pom.xml)
+
+Google V8 Engine (JS ->MachineCode)
+
+NPM (node package manager)
+
+------
+3 types repo
+
+1) remote
+2) global   npm install -g jasmine
+3) local    
+
+
+shrinkwrap
+
+nodeJS microservice
+callback
+promise (resolve,reject)
+async await
+observable
+
+
+
+-----
+to get realtime weather app using node
+1) user is asked to enter the city in console 
+2) make rest api call to know the current weather
+3) in case if user doesnt pass the city ,app autodetect the location and show the weather
