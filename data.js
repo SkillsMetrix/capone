@@ -1,34 +1,39 @@
-
 //loading the user from database
-function getUser(id, callback) {
-  setTimeout(() => {
-    console.log("Getting the user from database");
-    callback({
-      id: id,
-      name: "Admin",
-    });
-  }, 1000);
+function getUser(id) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("Getting the user from database");
+      resolve({
+        id: id,
+        name: "Admin",
+      });
+    }, 1000);
+  });
 }
 //loading all the blogs posted on social media
-function getBlogs(username, callback) {
+function getBlogs(username) {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       console.log("calling RestAPI to laod the posts of user ");
-      callback(['Post-1','Post-2','Post-3']);
+      resolve(["Post-1", "Post-2", "Post-3"]);
     }, 1000);
-  }
-  // load the comments of the posts
+  });
+}
+// load the comments of the posts
 
-  function getComments(post, callback) {
+function getComments(post) {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      console.log("calling RestAPI to laod the comments "+ post);
-      callback(['Comments for '+ post]);
+      console.log("calling RestAPI to laod the comments " + post);
+      resolve(["Comments for " + post]);
     }, 1000);
-  }
+  });
+}
 // print all the   (callback chain)
-  getUser(101,(user)=>{
-    getBlogs(user.name,(blogs)=>{
-        getComments(blogs[0],(comments)=>{
-            console.log(user ,blogs[0],comments);
-        })
-    })
-  })
+
+getUser(101)
+.then(user => getBlogs(user.name))
+
+.then(blogs =>getComments(blogs[0]))
+.then(comments => console.log(comments))
+.catch(err => console.log('Error '+ err.message))
