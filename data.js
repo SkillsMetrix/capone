@@ -25,3 +25,55 @@ if (typeof argv.l === "string" && argv.l.length > 0) {
     }
   });
 }
+
+
+
+
+
+
+
+const request= require('request')
+
+var URL='https://ipinfo.io/'
+module.exports= function(callback) {
+
+request({
+    url:URL,
+    json:true
+},function(error,response,body){
+    if(error){
+        callback('unable to detect');
+    }else{
+        
+        callback(body);
+    }
+})
+}
+
+
+
+
+
+var request= require('request')
+
+
+module.exports= function(location,callback){
+
+    var ec= encodeURIComponent(location)
+    var URL='https://api.openweathermap.org/data/2.5/weather?q=' +ec+ '&appid=b3aaa0b3323c0baab93aff38f75b44cb&units=metric'
+
+    if(!location){
+        return callback('No Location Provided')
+    }
+request({
+    url:URL,
+    json:true
+},function(error,response,body){
+    if(error){
+        callback('Unable to Fetch Data');
+    }else {
+        callback('Its ' + body.main.temp + ' in ' +   body.name);
+    }
+
+})
+}
