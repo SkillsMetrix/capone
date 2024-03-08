@@ -19,3 +19,25 @@ module.exports=(req,res,next)=>{
         })
     }
 }
+
+
+
+
+
+
+const express= require('express')
+var bp= require('body-parser')
+const jwt= require('jsonwebtoken')
+const config= require('./config')
+const router= express.Router()
+
+const app= express()
+
+router.use(require('./tokenChecker'))
+router.get('/secure',(req,res)=>{
+    res.send('I am secured...!')
+})
+app.use('/api',router)
+app.listen(4000,()=>{
+    console.log('server is ready');
+})
