@@ -1,31 +1,21 @@
-const express = require("express");
-const bp = require("body-parser");
-var _= require('underscore')
-var app = express();
-app.use(express.static("public"));
-app.use(bp.json());
-uid = 1;
-userdata = [];
-app.get("/loadusers", (req, res) => {
-  res.send(userdata);
-});
-app.get("/loaduser/:id", (req, res) => {
-  const uid = parseInt (req.params.id);
-   var mtd=_.findWhere(userdata,{id:uid})
-  
-  if (mtd) {
-    res.json(mtd);
-  } else {
-    res.status(404).send();
-  }
-});
-app.post("/adduser", (req, res) => {
-  const data = req.body;
-  data.id = uid++;
-  userdata.push(data);
-  res.send(data);
-});
+const jwt= require('jsonwebtoken')
+const config= require('./config')
 
-app.listen(4000, () => {
-  console.log("server is ready...!");
-});
+module.exports=(req,res,next)=>{
+    const token=req.body.token || req.query.token || req.headers['x-access-token']
+    //decode token
+    if(token){
+        jwt.verify(token,config.secret,function(err,decoded){
+            if(err){
+                return res.status(401).json({"error":true,"message":"Unauthorized Access"})
+            }
+            req.decoded=decoded
+            next()
+        })
+    }else{
+        res.status(403).send({
+            "error":true,
+            "message":"No Token Found"
+        })
+    }
+}
