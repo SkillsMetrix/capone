@@ -1,50 +1,26 @@
-const asyncHandler= require('express-async-handler')
-const User= require('../models/userModel')
-const bcrypt= require('bcrypt')
-const jwt= require('jsonwebtoken')
-const registerUser=asyncHandler(async(req,res)=> {
-    const {username,email,password} = req.body
-    if(!username || !email || !password){
-        res.status(400)
-        throw new Error("All Fields are mandatory")
+var cluster=require('cluster')
+var express= require('express')
+
+if(cluster.isMaster){
+    var cpuCount= require('os').cpus().length
+    console.log('Master cluster setting up ' + cpuCount + ' workers');
+    for(var i=0; i<cpuCount;i+=1){
+        cluster.fork()
     }
-    const userAvailable=await User.findOne({email})
-    if(userAvailable){
-        res.status(400)
-        throw new Error("User already registered")
-    }
-    const hashedPassword=await bcrypt.hash(password,10)
-    console.log('Hashed Password ' ,hashedPassword);
-    const user=await User.create({
-       username,email,password :hashedPassword
+    cluster.on('online',function(worker){
+        console.log('Worker '+worker.process.pid+ ' is online');
     })
-    res.json({message :'user registered'})
- })
-
-const loginUser=asyncHandler(async(req,res)=> {
-    const {email,password} = req.body
-    const user= await User.findOne({email})
-    if(user && (await bcrypt.compare(password,user.password))){
-        res.send('login success')
-        const accessToken=jwt.sign({
-            user:{
-                username:user.username,
-                email:user.email,
-                id:user.id
-            }
-        },
-        "123urt",
-        {expiresIn:'1m'}
-        )
-        res.json({message:' Login success'})
-        console.log(accessToken);
-    }else{
-    res.json({message:' Login failed'})
-    }
-})
-
-const currentUser=asyncHandler((req,res)=> {
-    res.json({message:'Current User Information'})
-})
-
-module.exports={registerUser,loginUser,currentUser}
+    cluster.on('exit' , function(worker,code,signal){
+        console.log('Worker '+ worker.process.pid + 'dead with code ' + code + ' and Signal ' + signal) ;
+        console.log('Starting a new Worker...!');
+        cluster.fork()
+    })
+}else{
+    var app= express()
+    app.get('/getdata',(req,res)=>{
+        res.send('Hello from Worker ' +process.id + ' process ' + process.pid)
+    })
+    app.listen(4000,()=>{
+        console.log('server is ready ' ,process.pid);
+    })
+}
