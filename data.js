@@ -1,26 +1,15 @@
-var cluster=require('cluster')
-var express= require('express')
+ 
+var express = require('express');
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-if(cluster.isMaster){
-    var cpuCount= require('os').cpus().length
-    console.log('Master cluster setting up ' + cpuCount + ' workers');
-    for(var i=0; i<cpuCount;i+=1){
-        cluster.fork()
-    }
-    cluster.on('online',function(worker){
-        console.log('Worker '+worker.process.pid+ ' is online');
-    })
-    cluster.on('exit' , function(worker,code,signal){
-        console.log('Worker '+ worker.process.pid + 'dead with code ' + code + ' and Signal ' + signal) ;
-        console.log('Starting a new Worker...!');
-        cluster.fork()
-    })
-}else{
-    var app= express()
-    app.get('/getdata',(req,res)=>{
-        res.send('Hello from Worker ' +process.id + ' process ' + process.pid)
-    })
-    app.listen(4000,()=>{
-        console.log('server is ready ' ,process.pid);
-    })
-}
+app.use(express.static(__dirname + '/public'));
+
+io.on('connection', function () {
+	console.log('User connected via socket.io!');
+});
+
+http.listen(4000, function () {
+	console.log('Server started!');
+});
