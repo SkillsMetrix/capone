@@ -1,19 +1,40 @@
-const p1 = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        console.log('The first promise has resolved');
-        resolve(10);
-    }, 1 * 1000);
 
-});
-const p2 = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        console.log('The second promise has rejected');
-        reject('Failed');
-    }, 2 * 1000);
-});
-const p3 = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        console.log('The third promise has resolved');
-        resolve(30);
-    }, 3 * 1000);
-});
+class Person {
+    _name:string
+    constructor(name){
+        this.name=typeof name==='string' ? name:'Anonymous'
+    }
+    set name(val){
+        this._name=Person.capitalzeWord(val)
+    }
+    get name(){
+        return this._name
+    }
+    printGreeting(){
+        console.log(`Hi i am ${this.name}`);
+        
+    }
+    static capitalzeWord(word){
+        return word[0].toUpperCase() + word.slice(1)
+    }
+}
+class Employee extends Person{
+    job:string
+    constructor(name,job='Working'){
+        super(name)
+        this.job=job
+    }
+    printGreeting(){
+        console.log(`Hi i am ${this.name} and i am ${this.job}`);
+    }
+    callSuperMethod(){
+        super.printGreeting()
+    }
+}
+var p1= new Employee('joe');
+p1.printGreeting()
+p1.callSuperMethod()
+var p2= new Person('newUser');
+p2.name
+
+
