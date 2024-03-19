@@ -1,40 +1,28 @@
+import React, { Component } from "react";
+import axios from "axios";
 
-class Person {
-    _name:string
-    constructor(name){
-        this.name=typeof name==='string' ? name:'Anonymous'
-    }
-    set name(val){
-        this._name=Person.capitalzeWord(val)
-    }
-    get name(){
-        return this._name
-    }
-    printGreeting(){
-        console.log(`Hi i am ${this.name}`);
-        
-    }
-    static capitalzeWord(word){
-        return word[0].toUpperCase() + word.slice(1)
-    }
+const URL = "https://jsonplaceholder.typicode.com/users";
+export default class RestApp extends Component {
+  state = {
+    userdata: [],
+  };
+
+  componentDidMount() {
+    axios
+      .get(URL)
+      .then((res) => res.data)
+      .then((data) => {
+        this.setState({ userdata: data });
+      });
+  }
+
+  render() {
+    return <div>
+        {this.state.userdata.map((user)=>(
+            <div key={user.email}>
+                {user.username} -- {user.email}
+            </div>
+        ))}
+    </div>;
+  }
 }
-class Employee extends Person{
-    job:string
-    constructor(name,job='Working'){
-        super(name)
-        this.job=job
-    }
-    printGreeting(){
-        console.log(`Hi i am ${this.name} and i am ${this.job}`);
-    }
-    callSuperMethod(){
-        super.printGreeting()
-    }
-}
-var p1= new Employee('joe');
-p1.printGreeting()
-p1.callSuperMethod()
-var p2= new Person('newUser');
-p2.name
-
-
