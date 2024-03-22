@@ -1,43 +1,100 @@
-
-
-
-import React, { useState } from 'react';
-
-function UsersApp(props) {
-    const [users,setUsers]= useState([])
-    const [uname,setUname]=useState('')
-    const [email,setEmail]=useState('')
-
-    const addUser=(e)=>{
-       e.preventDefault();
-       setUsers([
-            ...users,{uname,email}
-       ])
-       setUname('')
-       setEmail('')
-    }
-    const deleteUser=(user)=>{
- setUsers(users.filter((note) => note.uname !== user))
-    }
-     return (
-        <div>
-            <div>
-                {users.map((data) => (
-                    <div>{data.uname} --- {data.email}
-                     <button onClick={() => deleteUser(data.uname)}>Delete</button>
-                    </div>
-                  
-                ))}
-               
-                <hr/>
-                <form onSubmit={addUser}>
-                    <input type='text' value={uname} onChange={(e)=> setUname(e.target.value)}/>
-                    <input type='email' value={email} onChange={(e)=> setEmail(e.target.value)}/>
-                    <button>Add User</button>
-                </form>
-            </div>
-        </div>
-    );
+* {
+  font-family: "Roboto", sans-serif;
+  padding: 0;
+  margin: 0;
 }
 
-export default UsersApp;
+.ui.cards > .card > .image {
+  height: 250px;
+  padding: 20px;
+  background: #fff;
+  margin: auto;
+}
+.ui.cards > .card > .image > img {
+  height: 100%;
+  max-width: 100%;
+  width: auto;
+}
+.ui.cards > .card > .content > .header {
+  height: 48px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.ui.cards > .card > .content > .description {
+  height: 36px;
+  margin-bottom: 0px;
+  overflow: hidden;
+}
+.ui.cards > .card .meta.price {
+  margin-bottom: 5px;
+  font-size: 18px;
+  color: #333;
+  font-weight: 600;
+}
+
+.ui.cards > .card .meta.price > a {
+  font-size: 1.3rem;
+  color: #222;
+}
+
+.ui.menu.fixed {
+  height: 60px;
+  padding-top: 15px;
+}
+
+.ui.grid.container {
+  margin-top: 45px;
+}
+
+.ui.grid > .row {
+  background: #fff;
+}
+.ui.grid > .row > .column.lp {
+  padding: 20px 40px 20px 20px;
+  align-self: flex-start !important;
+}
+.ui.grid > .row > .column.rp {
+  padding: 20px 20px 20px 40px;
+  text-align: left;
+  align-self: flex-start !important;
+}
+
+.ui.grid > .row > .column > img,
+.ui.grid > .row > img {
+  height: 100%;
+}
+.ui.placeholder .header:not(:first-child):before,
+.ui.placeholder .image:not(:first-child):before,
+.ui.placeholder .paragraph:not(:first-child):before {
+  display: none;
+}
+
+.ui.label,
+.ui.labels .label {
+  font-size: 22px;
+}
+
+.column.rp h1 {
+  color: #333;
+}
+.column.rp p {
+  font-size: 18px;
+  color: #777;
+}
+.ui.placeholder.segment .column .button,
+.ui.placeholder.segment .column .field,
+.ui.placeholder.segment .column textarea,
+.ui.placeholder.segment .column > .ui.input {
+  background-color: #ff3e6c;
+  border: 1px solid #ff3e6c;
+  color: #fff;
+  font-size: 18px;
+  margin-left: 0;
+}
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
