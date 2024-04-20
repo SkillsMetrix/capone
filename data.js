@@ -1,67 +1,73 @@
-import {createStore,applyMiddleware,compose} from 'redux'
- import rootReducers from './reducers'
- import thunk from 'redux-thunk'
+const mongoose = require('mongoose');
+const cors= require('cors')
+var express= require('express')
+var bp=require('body-parser')
+ const empcrud =require('./model')
+var app= express()
+app.use(bp.json())
+app.use(cors())
+app.post('/adduser',(req,res)=>{
+const users = new empcrud(
+    { ...req.body
+     });
+     users.save().then(() => res.send('user added'));
+     
+})
+app.get('/loadusers',async(req,res)=>{
+  
+    const users= await empcrud.find()
+    return res.status(200).json(users)
+   
+})
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const appStore= createStore(rootReducers, composeEnhancers(applyMiddleware(thunk)) )
-export default appStore
+
+app.get('/loadusers/:id',async(req,res)=>{
+    const uid= req.params.id
+    const user= await empcrud.findById(uid)
+    return res.status(200).json(user)
+   
+})
 
 
-----------
+app.put('/updateusers/:id',async(req,res)=>{
+    const uid= req.params.id
+    await  empcrud.updateOne({uid},req.body)
+    const updateuser= await empcrud.findById(uid)
+    return res.status(200).json(updateuser)
+   
+})
 
-  import apiCall from "../../apis/apiCall"
-import { ActionTypes } from "../constants/action-types"
 
+const startServer=async() =>{
+    await mongoose.connect(`mongodb+srv://upgrad:upgrad123@cluster0.rle5i.mongodb.net/mernndb?retryWrites=true&w=majority`);
+    app.listen(4000,()=>{
+        console.log('server is ready');
 
-export const setProducts=(product) =>{
-    return {
-        type:ActionTypes.SET_PRODUCTS,
-        payload:product
-    }
+})
+
 }
+startServer()
 
-export const fetchProducts=() =>async(dispatch) =>{
-    const response= await apiCall.get('/products')
-    dispatch({type:ActionTypes.FETCH_PRODUCTS,payload:response.data})
-}
-
-export const selectedProducts=(product) =>{
-    return {
-        type:ActionTypes.SELECTED_PRODUCT,
-        payload:product
-    }
-}
-------------
-
-
- import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-
-import ProductComponent from "./ProductComponent";
-import { fetchProducts, setProducts } from "../redux/actions/productActions";
-const URL = "https://fakestoreapi.com/products";
-
-function ProductListing(props) {
-  const dispatch=useDispatch()
+    
 
 
 
-  useEffect(() => {
-    dispatch(fetchProducts())
-  }, []);
-  const products = useSelector((state) => state);
-  console.log(products);
-  return (
-    <div className="ui grid container">
-      <ProductComponent />
-    </div>
-  );
-}
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/merndb');
 
-export default ProductListing;
+const UserApp = mongoose.model('myapp', { name: String });
+
+const kitty = new UserApp({ name: 'Zildjian' });
+kitty.save().then(() => console.log('user added...'));
 
 
-------------
 
- 
+const mongoose = require('mongoose');
+
+const empcrud = mongoose.model('empcrud', 
+{ 
+    uname: String,
+    email:String ,
+    password: String
+});
+module.exports=empcrud
